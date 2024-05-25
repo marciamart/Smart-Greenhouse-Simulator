@@ -37,21 +37,17 @@ def sensor_temperatura():
             time.sleep(1) 
             
 
-
-
 def sensor_umidade():
     while True:
             umidade_do_solo = random.triangular(50, 80, 70)  
             print(f"Umidade do solo: {umidade_do_solo:.2f}%") 
             time.sleep(1) 
 
-1
 def sensor_co2():
     while True:
             nivel_de_co2 = random.triangular(1200, 1500,1400)  
             print(f"Umidade do solo: {nivel_de_co2:.2f} ppm") 
             time.sleep(1) 
-
 
 #criando os atuadores
 def aquecedor():
