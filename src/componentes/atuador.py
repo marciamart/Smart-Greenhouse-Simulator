@@ -15,8 +15,7 @@ class Atuador:
         else:
             pass
             
-            
-        
+             
 Aquecedor = Atuador(False, 1)
 resfriador = Atuador(False, 2)
 irrigador = Atuador(False, 3)
