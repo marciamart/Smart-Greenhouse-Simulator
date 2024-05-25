@@ -27,8 +27,6 @@ def menu():
             print("b. Umidade do solo")
             print("c. Nivel de CO2")
             op= input("\nEscolha uma opção:\n")
-            if op == 'a':
-                sensor_temperatura()
             
             # Chame uma função ou adicione a lógica para a Opção 1 aqui
         elif choice == '2':
