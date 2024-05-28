@@ -14,10 +14,3 @@ class Atuador:
             self.onOff = True
         else:
             pass
-            
-             
-Aquecedor = Atuador(False, 1)
-resfriador = Atuador(False, 2)
-irrigador = Atuador(False, 3)
-injetorCo2 = Atuador(False, 4)
-
