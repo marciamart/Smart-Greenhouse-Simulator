@@ -1,16 +1,13 @@
 class Atuador:
-    def __init__(self, onOff, id):
-        self.onOff = onOff
+    def __init__(self, id):
+        self.status = None
         self.id = id
         
-    def ligar(self, ligar):
-        if(ligar == True and self.onOff == False):
-            self.onOff = True
-        else:
-            pass
-    
-    def Desligar(self, Desligar):
-        if(Desligar == True and self.onOff == True):
-            self.onOff = True
-        else:
-            pass
+    def ligar(self):
+        self.status = True
+        
+    def Desligar(self):
+        self.status = False
+
+    def conectarGerenciador(self):# mensagens
+        pass

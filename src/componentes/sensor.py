@@ -13,7 +13,8 @@ class sensor:
     threading.Thread(target=self.iniciarLeitura).start()
 
     def iniciarLeitura(self):
-        while True:
+        self.run = True
+        while self.run:
             self.valor = random.triangular(self.paramMin, self.paramMax, (self.paramMax+self.paramMin)/2)
 
     def pararLeitura(self):
