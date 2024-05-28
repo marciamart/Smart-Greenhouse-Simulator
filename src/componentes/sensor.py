@@ -1,8 +1,8 @@
-import time
-import random
-import threading
+import time #módulo para funções relacionadas ao tempo 
+import random #módulo para gerar números aleatrórios 
+import threading #módulo que permite a execução de várias operações ao mesmo tempo
 
-class sensor:
+class sensor: 
     def _init_(self, paramMin, paramMax):
         self.id = id(self)
         self.valor = None
@@ -12,16 +12,16 @@ class sensor:
 
     threading.Thread(target=self.iniciarLeitura).start()
 
+    #métodos criados para operar as ações relacionadas a leitura dos sensores
     def iniciarLeitura(self):
-        self.run = True
-        while self.run:
-            self.valor = random.triangular(self.paramMin, self.paramMax, (self.paramMax+self.paramMin)/2)
-
+        while True:
+            self.valor = random.triangular(self.paramMin, self.paramMax, (self.paramMax+self.paramMin)/2) #Gera um valor aleatório entre o intervalo definido com uma média entre os parâmetros
+    
     def pararLeitura(self):
         self.run = False
 
     def getValor(self):
         return self.valor
 
-    def conectarGerenciador(self):# mensagens
+    def conectarGerenciador(self):
         pass
