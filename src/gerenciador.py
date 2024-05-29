@@ -37,10 +37,18 @@ class gerenciador:
             self.sensores[sensor].valor = valorSensor
 
 
-   def EnviarUltimaLeitura():
+   def EnviarUltimaLeitura(self, msg):
       pass
 
-   def LigaDesliga():
-      pass
+
+   def LigaDesliga(self, msg):
+      idAtuador = int(msg["id"])
+      statusAtudor= bool(msg["valor"])
+      for atuador in self.atuadores:
+         if(self.atuadores[atuador].id == idAtuador):
+            if(statusAtudor == False):
+               self.atuadores[atuador].ligar()
+            else:
+               self.atuadores[atuador].desligar()
    
   

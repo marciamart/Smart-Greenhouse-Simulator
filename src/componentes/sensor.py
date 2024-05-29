@@ -3,7 +3,7 @@ import random #módulo para gerar números aleatrórios
 import threading #módulo que permite a execução de várias operações ao mesmo tempo
 import socket
 class Sensor: 
-    def init(self, paramMin, paramMax):
+    def __init__(self, paramMin, paramMax):
         self.id = id(self)
         self.valor = None
         self.paramMin = paramMin
@@ -35,7 +35,7 @@ class Sensor:
         try:
             if self.client_socket:  # Verifica se o socket está conectado
                 # Cria a mensagem a ser enviada contendo o ID do sensor e o valor atual
-                message = f"Sensor ID: {self.id}, Valor: {self.getValor()}"
+                message = {"quemEnviou" : "Sensor", "id": self.id, "valor": self.getValor()}
                 print(f"Enviando: {message}")
                 # Envia a mensagem ao gerenciador
                 self.client_socket.sendall(message.encode('utf-8'))
