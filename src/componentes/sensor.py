@@ -1,7 +1,7 @@
 import time #módulo para funções relacionadas ao tempo 
 import random #módulo para gerar números aleatrórios 
 import threading #módulo que permite a execução de várias operações ao mesmo tempo
-
+import socket
 class sensor: 
     def _init_(self, paramMin, paramMax):
         self.id = id(self)
@@ -23,5 +23,7 @@ class sensor:
     def getValor(self):
         return self.valor
 
-    def conectarGerenciador(self):
-        pass
+    def conectarGerenciador(self, host = 'localhost', port = 5000):
+        self.client_socket = socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client_socket.connect((host,port))
+        

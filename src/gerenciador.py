@@ -20,3 +20,12 @@ class gerenciador:
             conn.close()
             break
          conn.sendall(data)
+
+   def ArmazenarUltimaLeitura():
+      pass
+
+   def LigaDesliga():
+      pass
+   
+   def ultimaLeitura():
+      pass
