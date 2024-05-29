@@ -23,9 +23,9 @@ class gerenciador:
             break
          else:
             mensagem = json.loads(dados)
-            if(mensagem["Quem"] == "Sensor"):
+            if(mensagem["quemEnviou"] == "Sensor"):
                self.ArmazenarUltimaLeitura(mensagem)
-            elif(mensagem['Quem'] == "Atuador"):
+            elif(mensagem['quemEnviou'] == "Atuador"):
                self.LigaDesliga(mensagem)
 
 
