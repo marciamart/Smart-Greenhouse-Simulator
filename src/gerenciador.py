@@ -33,6 +33,7 @@ class gerenciador:
             mensagem = json.loads(dados)
             if(mensagem["quemEnviou"] == "Sensor"):
                self.ArmazenarUltimaLeitura(mensagem)
+               self.EnviarUltimaLeitura(mensagem, conexao)
             elif(mensagem['quemEnviou'] == "Atuador"):
                self.LigaDesliga(mensagem)
 
