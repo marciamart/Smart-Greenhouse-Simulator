@@ -3,18 +3,17 @@ import socket
 import json
 from componentes import sensor
 
-#aceitar conexoes
+#aceitar conexoes - ok
 #receber leitura dos sensores
 #ligar e desligar atuadores
 
-
-codConexao = 00000
 #alguma coisa que possa alterar a numeração e poder enviar pros atuadores e sensores os cod de conexao atuais
 
 class gerenciador:
-   def __init__(self):
-      self.atuadores = []
-      self.sensores = [] 
+   def __init__(self, codConexao):
+      self.atuadores = {}
+      self.sensores = {}
+      self.codConexao = codConexao 
       
 
    def server (self, host = 'localhost', port=5000):
@@ -24,30 +23,52 @@ class gerenciador:
 
       print ('Aguardando conexão de um cliente...')
 
-      # condição de aceitação
+      
       while True:
          conexao, ender = self.socketGenrenciador.accept()
          mensagem_inicial = json.loads(conexao.recv(1025).decode('utf-8'))
                     
-         print (f'Conectado em {mensagem_inicial['autor']}-{mensagem_inicial['id']}')
-         while True:
-            dados = conexao.recv(1024).decode()
-            
-            if not dados:
-               print ('Fechando a conexão')
-               conexao.close()
-               break
-
+         print (f'Conexão estabelecida com {mensagem_inicial['autor']}-{mensagem_inicial['id']}')
+         
+         # condição de aceitação
+         if mensagem_inicial['codigo_conexao'] == self.codConexao:
+            resposta = {'status': True}
+            conexao.sendall(json.dumps(resposta).encode('utf-8'))
+            if mensagem_inicial['tipo'] == 'Sensor':
+               self.sensores[f"{mensagem_inicial['autor']}"] = None
             else:
-               mensagem = json.loads(dados)
-               if(mensagem["autor"] == "Sensor"):
-                  self.ArmazenarUltimaLeitura(mensagem)
-                  self.EnviarUltimaLeitura(mensagem, conexao)
-               elif(mensagem['autor'] == "Atuador"):
-                  self.LigaDesliga(mensagem)
+               self.atuadores[f"{mensagem_inicial['autor']}"] = None
+         else:
+            resposta = {'status': False}
+            conexao.sendall(json.dumps(resposta).encode('utf-8'))
+            conexao.close()
+
+           
+
+         dados = conexao.recv(1024).decode()
+         
+         if not dados:
+            print ('Fechando a conexão')
+            conexao.close()
+            break
+
+         else:
+            mensagem = json.loads(dados)
+            if(mensagem["autor"] == "Sensor"):
+               self.ArmazenarUltimaLeitura(mensagem)
+               self.EnviarUltimaLeitura(mensagem, conexao)
+            elif(mensagem['autor'] == "Atuador"):
+               self.LigaDesliga(mensagem)
+            elif(mensagem["autor"] == "Cliente"):
+               pass
 
 
    def ArmazenarUltimaLeitura(self, msg):
+      self.sensores[msg["autor"]] = 
+
+
+
+
       idSensor = int(msg["id"])
       valorSensor = float(msg["valor"])
       for sensor in self.sensores:
