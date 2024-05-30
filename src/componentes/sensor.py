@@ -5,11 +5,13 @@ import socket
 import json
 
 class Sensor: 
-    def __init__(self, paramMin, paramMax):
+    def __init__(self,tipo, paramMin, paramMax, codConex):
         self.id = id(self)
         self.valor = None
+        self.tipo = tipo
         self.paramMin = paramMin
         self.paramMax = paramMax
+        self.codConex = codConex
         self.run = True
         threading.Thread(target=self.iniciarLeitura).start()
 
@@ -30,16 +32,16 @@ class Sensor:
             print(f"estabelecido conexão em {host}:{port}")
 
             #primeira mensagem para aceitação de conexão
-            messagem_inicial = {"autor" : "Sensor", "id": self.id, "código de conexão": 00000}
+            messagem_inicial = {"autor" : "Sensor :{self.tipo}", "id": self.id, "código de conexão": self.codConex}
             self.client_socket.sendall(json.dumps(messagem_inicial).encode('utf-8'))
 
             #resposta se foi aceito ou nao
             resposta = json.loads(self.client_socket.recv(1025).decode('utf-8'))
             
-            if self.client_socket:  # Verifica se o socket está conectado
+            if resposta["status"]==True and self.client_socket:  # Verifica se o socket está conectado
                 #enviando leitura de 1 em 1 segundo
                 while True:
-                    messagem = {"autor" : "Sensor", "id": self.id, "valor": self.valor} # Cria a mensagem a ser enviada contendo o ID do sensor e o valor atual
+                    messagem = {"autor" : "Sensor :{self.tipo}", "id": self.id, "valor": self.valor} # Cria a mensagem a ser enviada contendo o ID do sensor e o valor atual
                     self.client_socket.sendall(json.dumps(messagem).encode('utf-8'))
                     time.sleep(1)
             else:

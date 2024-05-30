@@ -3,7 +3,13 @@ import socket
 import json
 from componentes import sensor
 
+#aceitar conexoes
+#receber leitura dos sensores
+#ligar e desligar atuadores
+
+
 codConexao = 00000
+#alguma coisa que possa alterar a numeração e poder enviar pros atuadores e sensores os cod de conexao atuais
 
 class gerenciador:
    def __init__(self):
@@ -19,23 +25,26 @@ class gerenciador:
       print ('Aguardando conexão de um cliente...')
 
       # condição de aceitação
-      conexao, ender = self.socketGenrenciador.accept()
-      print ('Conectado em', ender)
       while True:
-         dados = conexao.recv(1024).decode()
-         
-         if not dados:
-            print ('Fechando a conexão')
-            conexao.close()
-            break
+         conexao, ender = self.socketGenrenciador.accept()
+         mensagem_inicial = json.loads(conexao.recv(1025).decode('utf-8'))
+                    
+         print (f'Conectado em {mensagem_inicial['autor']}-{mensagem_inicial['id']}')
+         while True:
+            dados = conexao.recv(1024).decode()
+            
+            if not dados:
+               print ('Fechando a conexão')
+               conexao.close()
+               break
 
-         else:
-            mensagem = json.loads(dados)
-            if(mensagem["autor"] == "Sensor"):
-               self.ArmazenarUltimaLeitura(mensagem)
-               self.EnviarUltimaLeitura(mensagem, conexao)
-            elif(mensagem["autor"] == "Atuador"):
-               self.LigaDesliga(mensagem)
+            else:
+               mensagem = json.loads(dados)
+               if(mensagem["autor"] == "Sensor"):
+                  self.ArmazenarUltimaLeitura(mensagem)
+                  self.EnviarUltimaLeitura(mensagem, conexao)
+               elif(mensagem['autor'] == "Atuador"):
+                  self.LigaDesliga(mensagem)
 
 
    def ArmazenarUltimaLeitura(self, msg):

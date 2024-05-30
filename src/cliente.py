@@ -11,7 +11,7 @@ def menu():
         print("\nEscolha uma opção: ")
         print("[1] Leitura dos sensores")
         print("[2] Atuadores em funcionamento")
-        print("[3] Incluir parâmetros na estufa")
+        print("[3] Parâmetros na estufa")
         print("[4] Sair")
     
         escolha = input()
