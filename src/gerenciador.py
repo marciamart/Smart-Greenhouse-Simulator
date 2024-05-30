@@ -31,10 +31,10 @@ class gerenciador:
 
          else:
             mensagem = json.loads(dados)
-            if(mensagem["quemEnviou"] == "Sensor"):
+            if(mensagem["autor"] == "Sensor"):
                self.ArmazenarUltimaLeitura(mensagem)
                self.EnviarUltimaLeitura(mensagem, conexao)
-            elif(mensagem['quemEnviou'] == "Atuador"):
+            elif(mensagem["autor"] == "Atuador"):
                self.LigaDesliga(mensagem)
 
 
