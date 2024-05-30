@@ -39,22 +39,26 @@ class gerenciador:
 
    def ArmazenarUltimaLeitura(self, msg):
       idSensor = int(msg["id"])
-      valorSensor = int(msg["valor"])
+      valorSensor = float(msg["valor"])
       for sensor in self.sensores:
-         if(self.sensores[sensor].id == idSensor):
-            self.sensores[sensor].valor = valorSensor
+         if(sensor.id == idSensor):
+            sensor.valor = valorSensor
 
 
-   def EnviarUltimaLeitura(self, msg):
-      pass
+   def EnviarUltimaLeitura(self, msg, conexao):
+      idSensor = int(msg["id"])
+      for sensor in self.sensores:
+         if(sensor.id == idSensor):
+            UltimaLeitura = {"autor": "Gerenciador", "id" : sensor.id, "valor" : sensor.valor}
+            conexao.sendall(json.dumps(UltimaLeitura).encode('utf-8'))
 
 
    def LigaDesliga(self, msg):
       idAtuador = int(msg["id"])
-      statusAtudor= bool(msg["valor"])
+      statusAtuador= bool(msg["valor"])
       for atuador in self.atuadores:
-         if(self.atuadores[atuador].id == idAtuador):
-            if(statusAtudor == False):
-               self.atuadores[atuador].ligar()
+         if(atuador.id == idAtuador):
+            if(statusAtuador == False):
+               atuador.ligar()
             else:
-               self.atuadores[atuador].desligar()
+               atuador.desligar()
