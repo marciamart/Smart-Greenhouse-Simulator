@@ -82,4 +82,8 @@ class gerenciador:
                self.atuaores[f'{mensagem["autor"]}'] = mensagem['status']
 
             elif(mensagem["tipo"] == "Cliente"):
-               
+               if mensagem['acao'] == 'valor sensor': #quer pegar o valor do sensor 
+                  
+
+               elif mensagem['acao'] == 'Atuadores ativos':
+               elif mensagem['acao'] == 'alterar parametro':

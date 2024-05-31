@@ -64,7 +64,7 @@ class cliente:
             elif escolha == '2':
                 print("Você escolheu a Opção 2.")
                 # Chame uma função ou adicione a lógica para a Opção 2 aqui
-                mensagem = {"tipo": "Cliente","autor":"{self.tipo}", "id": self.id, 'acao':'Atuadores ativos',"solicitato": 'Atuadores ativos'}
+                mensagem = {"tipo": "Cliente","autor":f"{self.tipo}", "id": self.id, 'acao':'Atuadores ativos',"solicitato": 'Atuadores ativos'}
                 self.client_socket.sendall(json.dumps(mensagem).encode('utf-8'))
 
                 resposta = json.loads(self.client_socket.recv(1024).decode('utf-8'))
