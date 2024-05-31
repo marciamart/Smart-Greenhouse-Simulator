@@ -9,8 +9,6 @@ class Sensor:
         self.id = id(self)
         self.valor = None
         self.tipo = tipo
-        self.paramMin = None
-        self.paramMax = None
         self.codConex = codConex
         self.run = True
         threading.Thread(target=self.iniciarLeitura).start()
@@ -18,7 +16,7 @@ class Sensor:
     #métodos criados para operar as ações relacionadas a leitura dos sensores
     def iniciarLeitura(self):
         while True:
-            self.valor = random.triangular(self.paramMin, self.paramMax, (self.paramMax+self.paramMin)/2) #Gera um valor aleatório entre o intervalo definido com uma média entre os parâmetros
+            self.valor = random.triangular(10, 90, 40) #Gera um valor aleatório entre o intervalo definido com uma média entre os parâmetros
     
     def pararLeitura(self):
         self.run = False

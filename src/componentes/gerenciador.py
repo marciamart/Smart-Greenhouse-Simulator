@@ -13,6 +13,8 @@ class gerenciador:
    def __init__(self, codConexao):
       self.atuadores = {}
       self.sensores = {}
+      self.clientes = {}
+      self.parametros = {} #max e min -> autor do sensor
       self.codConexao = codConexao 
       
 
@@ -23,58 +25,47 @@ class gerenciador:
 
       print ('Aguardando conexão de um cliente...')
 
+      conexao, ender = self.socketGenrenciador.accept()
+      mensagem_inicial = json.loads(conexao.recv(1025).decode('utf-8'))
+                  
+      print (f'Conexão estabelecida com {mensagem_inicial['autor']}-{mensagem_inicial['id']}')
       
-      while True:
-         conexao, ender = self.socketGenrenciador.accept()
-         mensagem_inicial = json.loads(conexao.recv(1025).decode('utf-8'))
-                    
-         print (f'Conexão estabelecida com {mensagem_inicial['autor']}-{mensagem_inicial['id']}')
-         
-         # condição de aceitação
-         if mensagem_inicial['codigo_conexao'] == self.codConexao:
-            resposta = {'status': True}
-            conexao.sendall(json.dumps(resposta).encode('utf-8'))
-            if mensagem_inicial['tipo'] == 'Sensor':
-               self.sensores[f"{mensagem_inicial['autor']}"] = None
-            else:
-               self.atuadores[f"{mensagem_inicial['autor']}"] = None
+      # condição de aceitação
+      if mensagem_inicial['codigo_conexao'] == self.codConexao:
+         resposta = {'status': True}
+         conexao.sendall(json.dumps(resposta).encode('utf-8'))
+         if mensagem_inicial['tipo'] == 'Sensor':
+            self.sensores[f"{mensagem_inicial['autor']}"] = [None, conexao]
+            self.parametros[f"{mensagem_inicial['autor']}"] = [20,80]
+         elif mensagem_inicial['tipo'] == 'Atuador':
+            self.atuadores[f"{mensagem_inicial['autor']}"] = None
          else:
-            resposta = {'status': False}
-            conexao.sendall(json.dumps(resposta).encode('utf-8'))
-            conexao.close()
+            self.clientes[f"{mensagem_inicial['autor']}"] = None
+      else:
+         resposta = {'status': False}
+         conexao.sendall(json.dumps(resposta).encode('utf-8'))
+         conexao.close()
 
-           
-
-         dados = conexao.recv(1024).decode()
-         
-         if not dados:
-            print ('Fechando a conexão')
-            conexao.close()
-            break
-
-         else:
+      if resposta['status'] == True:
+         while True:   
+            #tudo que pode receber de mensagens
+            dados = conexao.recv(1024).decode()
             mensagem = json.loads(dados)
-            if(mensagem["autor"] == "Sensor"):
-               self.ArmazenarUltimaLeitura(mensagem)
-               self.EnviarUltimaLeitura(mensagem, conexao)
-            elif(mensagem['autor'] == "Atuador"):
+
+            if(mensagem["tipo"] == "Sensor"):
+               self.sensores[f'{mensagem["autor"]}'] = mensagem['valor']
+               sensorParam = self.parametros[f'{mensagem["autor"]}']
+               if mensagem['valor'] < sensorParam[0]:
+                  #aquecedor
+                  #irrigação
+                  #injetor
+
+               
                self.LigaDesliga(mensagem)
-            elif(mensagem["autor"] == "Cliente"):
-               pass
-
-
-   def ArmazenarUltimaLeitura(self, msg):
-      self.sensores[msg["autor"]] = 
-
-
-
-
-      idSensor = int(msg["id"])
-      valorSensor = float(msg["valor"])
-      for sensor in self.sensores:
-         if(sensor.id == idSensor):
-            sensor.valor = valorSensor
-
+            elif(mensagem['tipo'] == "Atuador"):
+               self.atuadores[f'{mensagem["autor"]}'] = mensagem['status']
+            elif(mensagem["tipo"] == "Cliente"):
+               self.EnviarUltimaLeitura(mensagem, conexao)
 
    def EnviarUltimaLeitura(self, msg, conexao):
       idSensor = int(msg["id"])
