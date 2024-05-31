@@ -15,6 +15,11 @@ class gerenciador:
       self.sensores = {}
       self.clientes = {}
       self.parametros = {} #max e min -> autor do sensor
+      self.acao = {
+         'temperatura': ['aquecedor','resfriador'],
+         'umidade': 'irrigacao',
+         'nivelCO2': 'injetor'
+      }
       self.codConexao = codConexao 
       
 
@@ -38,9 +43,9 @@ class gerenciador:
             self.sensores[f"{mensagem_inicial['autor']}"] = [None, conexao]
             self.parametros[f"{mensagem_inicial['autor']}"] = [20,80]
          elif mensagem_inicial['tipo'] == 'Atuador':
-            self.atuadores[f"{mensagem_inicial['autor']}"] = None
+            self.atuadores[f"{mensagem_inicial['autor']}"] = [None, conexao]
          else:
-            self.clientes[f"{mensagem_inicial['autor']}"] = None
+            self.clientes[f"{mensagem_inicial['autor']}"] =  conexao
       else:
          resposta = {'status': False}
          conexao.sendall(json.dumps(resposta).encode('utf-8'))
@@ -53,34 +58,28 @@ class gerenciador:
             mensagem = json.loads(dados)
 
             if(mensagem["tipo"] == "Sensor"):
-               self.sensores[f'{mensagem["autor"]}'] = mensagem['valor']
+               self.sensores[f'{mensagem["autor"]}'][0] = mensagem['valor']
                sensorParam = self.parametros[f'{mensagem["autor"]}']
-               if mensagem['valor'] < sensorParam[0]:
-                  #aquecedor
-                  #irrigação
-                  #injetor
+               atuador = self.acao[f'{mensagem["autor"]}'][0] 
+               #         x                 min       
+               if mensagem['valor'] < sensorParam[0]: #Parametro Minimo
+                  comando = {'mensagem': 'ligar'}
+                  #encontra conexao(conn) do seu atuador 
+                  conn = self.atuadores[atuador][1]
+                  conn.sendall(json.dumps(comando).encode('utf-8'))
+               elif mensagem['valor'] > sensorParam[1]: #Parametro Maximo
+                  if mensagem["autor"] == 'temperatura':
+                     comando = {'mensagem': 'ligar'}
+                     conn = self.atuadores['resfriador'][1]
+                     conn.sendall(json.dumps(comando).encode('utf-8'))
+               else: # desliga os demais se estiverem acima do max caso esteja ligado
+                  comando = {'mensagem': 'desligar'}
+                  if atuador[0] == True:
+                     conn = self.atuadores[atuador][1]
+                     conn.sendall(json.dumps(comando).encode('utf-8'))
 
-               
-               self.LigaDesliga(mensagem)
             elif(mensagem['tipo'] == "Atuador"):
-               self.atuadores[f'{mensagem["autor"]}'] = mensagem['status']
+               self.atuaores[f'{mensagem["autor"]}'] = mensagem['status']
+
             elif(mensagem["tipo"] == "Cliente"):
-               self.EnviarUltimaLeitura(mensagem, conexao)
-
-   def EnviarUltimaLeitura(self, msg, conexao):
-      idSensor = int(msg["id"])
-      for sensor in self.sensores:
-         if(sensor.id == idSensor):
-            UltimaLeitura = {"autor": "Gerenciador", "id" : sensor.id, "valor" : sensor.valor}
-            conexao.sendall(json.dumps(UltimaLeitura).encode('utf-8'))
-
-
-   def LigaDesliga(self, msg):
-      idAtuador = int(msg["id"])
-      statusAtuador= bool(msg["valor"])
-      for atuador in self.atuadores:
-         if(atuador.id == idAtuador):
-            if(statusAtuador == False):
-               atuador.ligar()
-            else:
-               atuador.desligar()
+               
