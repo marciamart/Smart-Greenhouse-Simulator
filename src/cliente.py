@@ -70,8 +70,9 @@ class cliente:
                 resposta = json.loads(self.client_socket.recv(1024).decode('utf-8'))
 
                 print('Aqui estão seus atuadores ativos:\n')
-                for atuador in resposta['atuadores']:
-                    print(f'{atuador}\n')
+                atuador = resposta['atuadores']
+                for i in atuador :
+                    print(f'{i}\n')
 
             elif escolha == '3':
                 print("Você escolheu a Opção 3.")

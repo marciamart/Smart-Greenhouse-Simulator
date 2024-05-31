@@ -83,7 +83,19 @@ class gerenciador:
 
             elif(mensagem["tipo"] == "Cliente"):
                if mensagem['acao'] == 'valor sensor': #quer pegar o valor do sensor 
-                  
+                  valor = self.sensores[mensagem['solicitado']][0]
+                  resposta = {'valor': valor}
+                  conexao.sendall(json.dumps(resposta).encode('utf-8'))
 
                elif mensagem['acao'] == 'Atuadores ativos':
+                  atuadores_ativos = []
+                  for atuador, bole in self.atuadores.items():
+                     if bole[0]  == True:
+                        atuadores_ativos.append(atuador)
+                  resposta = {'atuadores': atuadores_ativos}
+                  conexao.sendall(json.dumps(resposta).encode('utf-8'))
+
                elif mensagem['acao'] == 'alterar parametro':
+                  self.parametros[f'{mensagem['solicitado']}'] = mensagem['parametros']
+                  resposta = {'mensagem': 'efetuada com sucesso'}
+                  conexao.sendall(json.dumps(resposta).encode('utf-8'))
