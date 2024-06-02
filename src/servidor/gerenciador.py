@@ -94,6 +94,6 @@ class Gerenciador:
                   conexao.sendall(json.dumps(resposta).encode('utf-8'))
 
                elif mensagem['acao'] == 'alterar parametro':
-                  self.parametros[f'{mensagem['solicitado']}'] = mensagem['parametros']
+                  self.parametros[f'{mensagem["solicitado"]}'] = mensagem['parametros']
                   resposta = {'mensagem': 'efetuada com sucesso'}
                   conexao.sendall(json.dumps(resposta).encode('utf-8'))
