@@ -32,7 +32,7 @@ class Gerenciador:
       conexao, ender = self.socketGenrenciador.accept()
       mensagem_inicial = json.loads(conexao.recv(1025).decode('utf-8'))
                   
-      print (f'Conexão estabelecida com {mensagem_inicial['autor']}-{mensagem_inicial['id']}')
+      print (f"Conexão estabelecida com {mensagem_inicial['autor']}-{mensagem_inicial['id']}")
       
       # condição de aceitação
       if mensagem_inicial['codigo_conexao'] == self.codConexao:
