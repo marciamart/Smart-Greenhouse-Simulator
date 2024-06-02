@@ -30,7 +30,7 @@ class Sensor:
             print(f"estabelecido conexão em {host}:{port}")
 
             #primeira mensagem para aceitação de conexão
-            messagem_inicial = {"tipo": "Sensor","autor" : "{self.tipo}", "id": self.id, "codigo_conexao": self.codConex}
+            messagem_inicial = {"tipo": "Sensor","autor" : f"{self.tipo}", "id": self.id, "codigo_conexao": self.codConex}
             self.client_socket.sendall(json.dumps(messagem_inicial).encode('utf-8'))
 
             #resposta se foi aceito ou nao

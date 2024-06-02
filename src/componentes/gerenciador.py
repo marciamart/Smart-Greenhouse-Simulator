@@ -9,7 +9,7 @@ from componentes import sensor
 
 #alguma coisa que possa alterar a numeração e poder enviar pros atuadores e sensores os cod de conexao atuais
 
-class gerenciador:
+class Gerenciador:
    def __init__(self, codConexao):
       self.atuadores = {}
       self.sensores = {}
