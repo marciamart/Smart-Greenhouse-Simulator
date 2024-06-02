@@ -30,7 +30,7 @@ class Sensor:
             print(f"estabelecido conexão em {host}:{port}")
 
             #primeira mensagem para aceitação de conexão
-            messagem_inicial = {"tipo": "Sensor","autor" : f"{self.tipo}", "id": self.id, "codigo_conexao": self.codConex}
+            messagem_inicial = {"tipo": "Sensor","autor" :self.tipo, "id": self.id, "codigo_conexao": self.codConex}
             self.client_socket.sendall(json.dumps(messagem_inicial).encode('utf-8'))
 
             #resposta se foi aceito ou nao
@@ -39,7 +39,7 @@ class Sensor:
             if resposta["status"]==True and self.client_socket:  # Verifica se o socket está conectado
                 #enviando leitura de 1 em 1 segundo
                 while True:
-                    messagem = {"tipo": "Sensor", "autor" : "{self.tipo}", "id": self.id, "valor": self.valor} # Cria a mensagem a ser enviada contendo o ID do sensor e o valor atual
+                    messagem = {"tipo": "Sensor", "autor" : self.tipo, "id": self.id, "valor": self.valor} # Cria a mensagem a ser enviada contendo o ID do sensor e o valor atual
                     self.client_socket.sendall(json.dumps(messagem).encode('utf-8'))
                     time.sleep(1)
             else:
