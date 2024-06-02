@@ -1,4 +1,4 @@
-from src.cliente.cliente import Cliente
+from cliente import Cliente
 
 def main():
     codConexao = input('insira código de conexão:')
