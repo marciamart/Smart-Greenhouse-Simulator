@@ -2,7 +2,7 @@ import socket
 import json
 
 class Atuador:
-    def _init_(self, tipo, codConex):
+    def __init__(self, tipo, codConex):
         self.status = None
         self.id = id(self)
         self.tipo = tipo
@@ -34,7 +34,7 @@ class Atuador:
             client_socket.connect((host, port))
             print(f"estabelecido conexão em {host}:{port}")
 
-            mensagem_inicial = {"tipo": "Atuador","autor":"{self.tipo}", "id": self.id, "codigo_conexao":  self.codConex}
+            mensagem_inicial = {"tipo": "Atuador","autor":{self.tipo}, "id": self.id, "codigo_conexao":  self.codConex}
             client_socket.sendall(json.dumps(mensagem_inicial).encode('utf-8'))
 
             resposta = json.loads(client_socket.recv(1024).decode('utf-8'))
