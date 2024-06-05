@@ -7,7 +7,7 @@ import json
 class Sensor: 
     def __init__(self,tipo, codConex):
         self.id = id(self)
-        self.valor = None
+        self.valor = 0.0
         self.tipo = tipo
         self.codConex = codConex
         self.run = True

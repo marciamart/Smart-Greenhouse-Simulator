@@ -3,7 +3,7 @@ import json
 
 class Atuador:
     def __init__(self, tipo, codConex):
-        self.status = None
+        self.status = False
         self.id = id(self)
         self.tipo = tipo
         self.codConex = codConex
@@ -24,7 +24,12 @@ class Atuador:
         else:
             print(f"Comando desconhecido: {comando}")
 
-        estado = {"tipo": "Atuador", "autor": "{self.tipo}", "id": self.id, "status": self.status} # Enviar resposta ao gerenciador confirmando a ação tomada
+        estado = {"tipo": "Atuador", 
+                  "autor": self.tipo, 
+                  "id": self.id, 
+                  "status": self.status
+                  }        
+        # Enviar resposta ao gerenciador confirmando a ação tomada
         client_socket.sendall(json.dumps(estado).encode('utf-8'))
 
     def conectarGerenciador(self, host='localhost', port=5000):
@@ -32,12 +37,18 @@ class Atuador:
         
         try:
             client_socket.connect((host, port))
-            print(f"estabelecido conexão em {host}:{port}")
+            print(f"{self.tipo} estabeleceu conexão em {host}:{port}")
 
-            mensagem_inicial = {"tipo": "Atuador","autor":{self.tipo}, "id": self.id, "codigo_conexao":  self.codConex}
+            mensagem_inicial = {"tipo": "Atuador",
+                                "autor":self.tipo, 
+                                "id": self.id, 
+                                "codigo_conexao":  self.codConex}
+            
             client_socket.sendall(json.dumps(mensagem_inicial).encode('utf-8'))
-
-            resposta = json.loads(client_socket.recv(1024).decode('utf-8'))
+            
+            data = client_socket.recv(1024).decode('utf-8')
+            resposta = json.loads(data)
+            print(resposta)
 
             if resposta["status"] == True:
 
