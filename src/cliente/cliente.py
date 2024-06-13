@@ -69,9 +69,12 @@ class Cliente:
 
                 resposta = json.loads(self.client_socket.recv(1024).decode('utf-8'))
                 atuadores_ativos = resposta['atuadores']
-                print('Atuadores ativos:')
-                for atuador in atuadores_ativos:
-                    print(atuador)
+                if atuadores_ativos != 'Nenhum atuador ativo':
+                    print('Atuadores ativos:')
+                    for atuador in atuadores_ativos:
+                        print(atuador)
+                else:
+                    print(atuadores_ativos)
 
             elif escolha == '3':
                 print('Escolha qual parâmetro deseja alterar:')
