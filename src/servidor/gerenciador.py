@@ -1,14 +1,3 @@
-#SERVIDOR
-import socket
-import json
-import threading
-
-#aceitar conexoes - ok
-#receber leitura dos sensores
-#ligar e desligar atuadores
-
-#alguma coisa que possa alterar a numeração e poder enviar pros atuadores e sensores os cod de conexao atuais
-
 import socket
 import json
 import threading
@@ -97,15 +86,15 @@ class Gerenciador:
 
                     elif mensagem["tipo"] == "Cliente":
                         if mensagem['acao'] == 'valor sensor':
-                            valor = self.sensores.get(mensagem['solicitado'][0], [None, None])[0]
+                            valor = self.sensores.get(mensagem['solicitado'], [None, None])[0]
                             resposta = {'valor': valor}
                             conexao.sendall(json.dumps(resposta).encode('utf-8'))
 
                         elif mensagem['acao'] == 'Atuadores ativos':
                             atuadores_ativos = []
-                            for atuador, bole in self.atuadores.itens():
-                              if bole[0] == True:
-                                  atuadores_ativos.append(atuador)
+                            for atuador, estado in self.atuadores.items():  # Corrigido aqui
+                                if estado[0] == True:
+                                    atuadores_ativos.append(atuador)
                             resposta = {'atuadores': atuadores_ativos}
                             conexao.sendall(json.dumps(resposta).encode('utf-8'))
 
@@ -116,3 +105,7 @@ class Gerenciador:
         except Exception as e:
             print(f"Erro na conexão: {e}")
 
+# Exemplo de uso
+if __name__ == "__main__":
+    gerenciador = Gerenciador(codConexao="12345")
+    gerenciador.server()
