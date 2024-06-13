@@ -60,7 +60,7 @@ class Cliente:
                 else:
                     print("Opção inválida, por favor, escolha uma opção entre 'a' e 'c'.")
                 
-                mensagem = {"tipo": "Cliente","autor":f"{self.tipo}", "id": self.id,'acao': 'valor sensor', "solicitado":  f'{sensor}'}
+                mensagem = {"tipo": "Cliente","autor":self.tipo, "id": self.id,'acao': 'valor sensor', "solicitado": sensor}
                 self.client_socket.sendall(json.dumps(mensagem).encode('utf-8'))
 
                 resposta = json.loads(self.client_socket.recv(1024).decode('utf-8'))
@@ -68,8 +68,7 @@ class Cliente:
 
             elif escolha == '2':
                 print("Você escolheu a Opção 2.")
-                # Chame uma função ou adicione a lógica para a Opção 2 aqui
-                mensagem = {"tipo": "Cliente","autor":f"{self.tipo}", "id": self.id, 'acao':'Atuadores ativos',"solicitato": 'Atuadores ativos'}
+                mensagem = {"tipo": "Cliente","autor":self.tipo, "id": self.id, 'acao':'Atuadores ativos',"solicitato": 'Atuadores ativos'}
                 self.client_socket.sendall(json.dumps(mensagem).encode('utf-8'))
 
                 resposta = json.loads(self.client_socket.recv(1024).decode('utf-8'))
@@ -81,7 +80,6 @@ class Cliente:
 
             elif escolha == '3':
                 print("Você escolheu a Opção 3.")
-                # Chame uma função ou adicione a lógica para a Opção 3 aqui
                 print('Escolha qual parâmetro deseja alterar:')
                 print("a. Temperatura")
                 print("b. Umidade do solo")
@@ -101,7 +99,7 @@ class Cliente:
                 paramMin = input('Parâmetro Mínimo: ')
                 paramMax = input('Parâmetro Máximo: ')
                 
-                mensagem = {"tipo": "Cliente","autor":f"{self.tipo}", "id": self.id,'acao':'alterar parametro', "solicitado":  f'{sensor}', 'parametros': [paramMin, paramMax]}
+                mensagem = {"tipo": "Cliente","autor":self.tipo, "id": self.id,'acao':'alterar parametro', "solicitado": sensor, 'parametros': [paramMin, paramMax]}
                 self.client_socket.sendall(json.dumps(mensagem).encode('utf-8'))
 
                 resposta = json.loads(self.client_socket.recv(1024).decode('utf-8'))
@@ -113,4 +111,3 @@ class Cliente:
                 break
             else:
                 print("Opção inválida, por favor, escolha uma opção de 1 a 4.")
-
