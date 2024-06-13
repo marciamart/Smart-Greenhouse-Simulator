@@ -106,7 +106,3 @@ class Cliente:
             else:
                 print("Opção inválida, por favor, escolha uma opção de 1 a 4.")
 
-# Exemplo de uso
-if __name__ == "__main__":
-    cliente = Cliente(tipo="chefe", codConex="12345")
-    cliente.conectarGerenciador()

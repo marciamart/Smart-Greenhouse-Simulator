@@ -105,7 +105,3 @@ class Gerenciador:
         except Exception as e:
             print(f"Erro na conexão: {e}")
 
-# Exemplo de uso
-if __name__ == "__main__":
-    gerenciador = Gerenciador(codConexao="12345")
-    gerenciador.server()
