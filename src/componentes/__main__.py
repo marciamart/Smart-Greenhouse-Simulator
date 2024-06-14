@@ -11,6 +11,7 @@ def main():
     injetor = Atuador('injetor', codConexao)
     Atuadores = [aquecedor, resfriador, irrigacao, injetor]
 
+    #cria uma thread para cada atuador que se conectar ao Gerenciador
     for atuador in Atuadores:
         threading.Thread(target=atuador.conectarGerenciador).start()
 
@@ -21,6 +22,7 @@ def main():
     sensores = [temperatura, umidade, nivelCO2]
     print('sensores ativados')
 
+    #cria uma thread para cada sensor que se conectar ao Gerenciador
     for sensor in sensores:
         threading.Thread(target=sensor.conectarGerenciador).start()
     
