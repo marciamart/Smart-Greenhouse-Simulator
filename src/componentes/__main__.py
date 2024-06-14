@@ -20,11 +20,12 @@ def main():
     umidade = Sensor('umidade', codConexao)
     nivelCO2 = Sensor('nivelCO2', codConexao)
     sensores = [temperatura, umidade, nivelCO2]
-    print('sensores ativados')
 
     #cria uma thread para cada sensor que se conectar ao Gerenciador
     for sensor in sensores:
         threading.Thread(target=sensor.conectarGerenciador).start()
+
+    print('sensores ativados')
     
 if __name__ == "__main__":
     main()
