@@ -38,70 +38,86 @@ class Cliente:
             print("[3] Parâmetros na estufa")
             print("[4] Sair")
         
-            escolha = input()
+            escolha = input('\nEscolha uma opção: ')
 
             if escolha == '1':
-                print("\nQual sensor deseja ter a leitura?")
-                print("a. Temperatura")
-                print("b. Umidade do solo")
-                print("c. Nivel de CO2")
-                opc = input("\nEscolha uma opção: ")
+                while True:
+                    print("\nQual sensor deseja ter a leitura?")
+                    print("a. Temperatura")
+                    print("b. Umidade do solo")
+                    print("c. Nivel de CO2")
+                    print("d. Voltar")
+                    opc = input("\nEscolha uma opção: ")
 
-                if opc == 'a':
-                    sensor = 'temperatura'
-                elif opc == 'b':
-                    sensor = 'umidade'
-                elif opc == 'c':
-                    sensor = 'nivelCO2'
-                else:
-                    print("Opção inválida, por favor, escolha uma opção entre 'a' e 'c'.")
-                    continue
-                
-                mensagem = {"tipo": "Cliente", "autor": self.tipo, "id": self.id, 'acao': 'valor sensor', "solicitado": sensor}
-                self.client_socket.sendall(json.dumps(mensagem).encode('utf-8'))
+                    if opc == 'a':
+                        sensor = 'temperatura'
+                    elif opc == 'b':
+                        sensor = 'umidade'
+                    elif opc == 'c':
+                        sensor = 'nivelCO2'
+                    elif opc == 'd':
+                        break
+                    else:
+                        print("Opção inválida, por favor, escolha uma opção entre 'a' e 'd'.")
+                        continue
+                    
+                    mensagem = {"tipo": "Cliente", "autor": self.tipo, "id": self.id, 'acao': 'valor sensor', "solicitado": sensor}
+                    self.client_socket.sendall(json.dumps(mensagem).encode('utf-8'))
 
-                resposta = json.loads(self.client_socket.recv(1024).decode('utf-8'))
-                print(f"Valor do sensor {sensor}: {resposta['valor']}")
+                    resposta = json.loads(self.client_socket.recv(1024).decode('utf-8'))
 
+                    if sensor == 'temperatura':
+                        print(f"\nValor do sensor {sensor}: {resposta['valor']:.2f}ºC")
+                    else:
+                        print(f"\nValor do sensor {sensor}: {resposta['valor']:.2f}%")
             elif escolha == '2':
                 mensagem = {"tipo": "Cliente", "autor": self.tipo, "id": self.id, 'acao': 'Atuadores ativos'}
                 self.client_socket.sendall(json.dumps(mensagem).encode('utf-8'))
 
                 resposta = json.loads(self.client_socket.recv(1024).decode('utf-8'))
                 atuadores_ativos = resposta['atuadores']
-                print('Atuadores ativos:')
-                for atuador in atuadores_ativos:
-                    print(atuador)
+                if atuadores_ativos != 'Nenhum atuador ativo':
+                    print('\nAtuadores ativos:\n')
+                    for atuador in atuadores_ativos:
+                        print(atuador)
+                else:
+                    print(atuadores_ativos)
 
             elif escolha == '3':
-                print('Escolha qual parâmetro deseja alterar:')
-                print("a. Temperatura")
-                print("b. Umidade do solo")
-                print("c. Nivel de CO2")
+                while True:
+                    print('\nEscolha qual parâmetro deseja alterar:')
+                    print("a. Temperatura")
+                    print("b. Umidade do solo")
+                    print("c. Nivel de CO2")
+                    print("d. Voltar")
 
-                opc = input("\nEscolha uma opção: ")
-                if opc == 'a':
-                    sensor = 'temperatura'
-                elif opc == 'b':
-                    sensor = 'umidade'
-                elif opc == 'c':
-                    sensor = 'nivelCO2'
-                else:
-                    print("Opção inválida, por favor, escolha uma opção entre 'a' e 'c'.")
-                    continue
+                    opc = input("\nEscolha uma opção: ")
+                    if opc == 'a':
+                        sensor = 'temperatura'
+                    elif opc == 'b':
+                        sensor = 'umidade'
+                    elif opc == 'c':
+                        sensor = 'nivelCO2'
+                    elif opc == 'd':
+                        break
+                    else:
+                        print("\nOpção inválida, por favor, escolha uma opção entre 'a' e 'c'.")
+                        continue
 
-                print(f'Alterando parâmetros do sensor: {sensor}')
-                paramMin = input('Parâmetro Mínimo: ')
-                paramMax = input('Parâmetro Máximo: ')
-                
-                mensagem = {"tipo": "Cliente", "autor": self.tipo, "id": self.id, 'acao': 'alterar parametro', "solicitado": sensor, 'parametros': [paramMin, paramMax]}
-                self.client_socket.sendall(json.dumps(mensagem).encode('utf-8'))
+                    print(f'\nAlterando parâmetros do sensor: {sensor}')
+                    paramMin = input('Parâmetro Mínimo: ')
+                    paramMax = input('Parâmetro Máximo: ')
 
-                resposta = json.loads(self.client_socket.recv(1024).decode('utf-8'))
-                print(f"Alteração {resposta['mensagem']}")
+                    print('\nProcessando...')
+                    
+                    mensagem = {"tipo": "Cliente", "autor": self.tipo, "id": self.id, 'acao': 'alterar parametro', "solicitado": sensor, 'parametros': [paramMin, paramMax]}
+                    self.client_socket.sendall(json.dumps(mensagem).encode('utf-8'))
+
+                    resposta = json.loads(self.client_socket.recv(1024).decode('utf-8'))
+                    print(f"\nAlteração {resposta['mensagem']}")
 
             elif escolha == '4':
-                print("Saindo do menu. Até logo!")
+                print("\nSaindo do menu. Até logo!")
                 break
             else:
                 print("Opção inválida, por favor, escolha uma opção de 1 a 4.")

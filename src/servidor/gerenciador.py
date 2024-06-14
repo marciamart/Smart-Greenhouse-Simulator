@@ -95,13 +95,18 @@ class Gerenciador:
                             for atuador, estado in self.atuadores.items():  # Corrigido aqui
                                 if estado[0] == True:
                                     atuadores_ativos.append(atuador)
-                            resposta = {'atuadores': atuadores_ativos}
+                            if atuadores_ativos:
+                                resposta = {'atuadores': atuadores_ativos}
+                            else:
+                                resposta = {'atuadores': 'Nenhum atuador ativo'}
                             conexao.sendall(json.dumps(resposta).encode('utf-8'))
 
                         elif mensagem['acao'] == 'alterar parametro':
-                            self.parametros[mensagem["solicitado"]] = mensagem['parametros']
+                            aux = []
+                            for i in mensagem['parametros']:
+                                aux.append(float(i))
+                            self.parametros[mensagem["solicitado"]] = aux
                             resposta = {'mensagem': 'efetuada com sucesso'}
                             conexao.sendall(json.dumps(resposta).encode('utf-8'))
         except Exception as e:
             print(f"Erro na conexão: {e}")
-
