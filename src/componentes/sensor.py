@@ -5,7 +5,7 @@ import socket
 import json
 
 class Sensor: 
-    def __init__(self,tipo, codConex):
+    def __init__(self, tipo, codConex):
         self.id = id(self)
         self.valor = 0.0
         self.tipo = tipo
