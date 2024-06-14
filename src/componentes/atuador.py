@@ -8,14 +8,17 @@ class Atuador:
         self.tipo = tipo
         self.codConex = codConex
 
+    #método que muda o estado do atuador (Liga)
     def ligar(self):
         self.status = True
         print(f"Atuador {self.tipo}:{self.id} ligado")
 
+    #método que muda o estado do atuador (Desliga)
     def desligar(self):
         self.status = False
         print(f"Atuador {self.tipo}:{self.id} desligado")
 
+    #método que processa o comando requisitado pelo gerenciador e muda o estado do atuador
     def processarComando(self, comando, client_socket):
         if comando['mensagem'] == "ligar":
             self.ligar()
@@ -24,11 +27,13 @@ class Atuador:
         else:
             print(f"Comando desconhecido: {comando}")
 
+        #mensagem contendo o estado do atuador após seu estado ser processado pelo Gerenciador
         estado = {"tipo": "Atuador", 
                   "autor": self.tipo, 
                   "id": self.id, 
                   "status": self.status
-                  }        
+                  }      
+          
         # Enviar resposta ao gerenciador confirmando a ação tomada
         client_socket.sendall(json.dumps(estado).encode('utf-8'))
 
@@ -39,6 +44,7 @@ class Atuador:
             client_socket.connect((host, port))
             print(f"{self.tipo} estabeleceu conexão em {host}:{port}")
 
+            #mensagem de requisição de conexão
             mensagem_inicial = {"tipo": "Atuador",
                                 "autor":self.tipo, 
                                 "id": self.id, 
@@ -47,15 +53,16 @@ class Atuador:
             client_socket.sendall(json.dumps(mensagem_inicial).encode('utf-8'))
             
             data = client_socket.recv(1024).decode('utf-8')
-            resposta = json.loads(data)
+            resposta = json.loads(data) 
+
+            #resposta se foi aceito ou não
             print(resposta)
 
-            if resposta["status"] == True:
-
+            if resposta["status"] == True: #Caso a conexão seja positiva, processará um comando requisitado pelo Gerenciador
                 while True:
                     comando = json.loads(client_socket.recv(1024).decode('utf-8'))
                     self.processarComando(comando, client_socket)
-            else:
+            else: #Em caso negativo, a conexão é interrompida
                 print("Conexão não aceita pelo gerenciador")
                 client_socket.close()
 

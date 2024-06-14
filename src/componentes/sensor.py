@@ -22,8 +22,7 @@ class Sensor:
         self.run = False
 
     def conectarGerenciador(self, host='localhost', port=5000):
-
-        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Cria um socket TCP/IP
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
         
         try:
             self.client_socket.connect((host, port)) # Conecta o socket ao gerenciador no host e porta especificados
@@ -35,9 +34,9 @@ class Sensor:
 
             #resposta se foi aceito ou nao
             resposta = json.loads(self.client_socket.recv(1025).decode('utf-8'))
-            
-            if resposta["status"]==True and self.client_socket:  # Verifica se o socket está conectado
-                #enviando leitura de 1 em 1 segundo
+
+            # Verifica se o socket está conectado e envia a leitura de 1 em 1 segundo
+            if resposta["status"]==True and self.client_socket: 
                 while True:
                     messagem = {"tipo": "Sensor", "autor" : self.tipo, "id": self.id, "valor": self.valor} # Cria a mensagem a ser enviada contendo o ID do sensor e o valor atual
                     self.client_socket.sendall(json.dumps(messagem).encode('utf-8'))
